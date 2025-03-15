@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+        #controls {
+            margin: 20px;
+        }
+        #hex-grid {
+            position: relative;
+            margin: 50px;
+            min-height: 600px;
+            min-width: 600px;
+        }
+        .hexagon {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #f0d9b5;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform: translate(-50%, -50%);
+            border: 2px solid #755c3b;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div id="controls">
+    <label>环数: <input type="range" id="rings" min="1" max="6" value="3"></label>
+    <span id="ring-value">3</span>
+</div>
+<div id="hex-grid"></div>
+
+<script>
+    function generateHexCoordinates(rings) {
+        const coordinates = [];
+        for (let k = 0; k < rings; k++) {
+            for (let q = -k; q <= k; q++) {
+                for (let r = Math.max(-k, -q - k); r <= Math.min(k, -q + k); r++) {
+                    if (Math.max(Math.abs(q), Math.abs(r), Math.abs(q + r)) === k) {
+                        coordinates.push({q, r});
+                    }
+                }
+            }
+        }
+        return coordinates;
+    }
+
+    function updateGrid(rings) {
+        const container = document.getElementById('hex-grid');
+        container.innerHTML = '';
+
+        const size = 60;
+        const hexagons = generateHexCoordinates(rings);
+
+        hexagons.forEach((coord, index) => {
+            const hex = document.createElement('div');
+            hex.className = 'hexagon';
+            hex.textContent = index + 1;
+
+            // 转换为像素坐标
+            const x = size * (Math.sqrt(3) * coord.q + Math.sqrt(3)/2 * coord.r) + 300;
+            const y = size * 3/2 * coord.r + 300;
+
+            hex.style.left = `${x}px`;
+            hex.style.top = `${y}px`;
+            container.appendChild(hex);
+        });
+    }
+
+    document.getElementById('rings').addEventListener('input', (e) => {
+        const rings = parseInt(e.target.value);
+        document.getElementById('ring-value').textContent = rings;
+        updateGrid(rings);
+    });
+
+    updateGrid(3); // 初始加载
+</script>
+</body>
+</html>

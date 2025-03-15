@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六边形网格</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        #grid-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .hex {
+            width: 60px;
+            height: 60px;
+            background-color: #f0f0f0;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: inline-block;
+            position: absolute;
+            text-align: center;
+            line-height: 60px;
+            font-size: 14px;
+            font-weight: bold;
+            border: 1px solid #ccc;
+            background-color: #f4f4f4;
+            cursor: pointer;
+        }
+        .slider {
+            margin-top: 20px;
+            width: 80%;
+        }
+    </style>
+</head>
+<body>
+
+<h1>六边形网格 (卡坦岛样式)</h1>
+<p>通过滑动条更改六边形网格的“环数”。</p>
+<label for="radiusSlider">环数 (半径):</label>
+<input type="range" id="radiusSlider" class="slider" min="1" max="5" value="3">
+
+<div id="grid-container"></div>
+
+<script>
+    function generateHexGrid(radius) {
+        const container = document.getElementById('grid-container');
+        container.innerHTML = ''; // 清空当前网格
+
+        const hexSize = 60; // 六边形大小（边长）
+        const horizontalSpacing = hexSize * 1.5;
+        const verticalSpacing = Math.sqrt(3) * hexSize;
+
+        let hexNumber = 1;
+
+        // 计算六边形网格的坐标
+        for (let q = -radius + 1; q < radius; q++) {
+            for (let r = -radius + 1; r < radius; r++) {
+                if (Math.abs(q + r) < radius) {
+                    const x = q * horizontalSpacing;
+                    const y = r * verticalSpacing + (q % 2 === 0 ? 0 : verticalSpacing / 2);
+
+                    const hex = document.createElement('div');
+                    hex.classList.add('hex');
+                    hex.style.left = `${x + container.offsetWidth / 2 - (radius * horizontalSpacing) / 2}px`;
+                    hex.style.top = `${y + container.offsetHeight / 2 - (radius * verticalSpacing) / 2}px`;
+                    hex.textContent = hexNumber++;
+
+                    container.appendChild(hex);
+                }
+            }
+        }
+    }
+
+    document.getElementById('radiusSlider').addEventListener('input', function () {
+        const radius = parseInt(this.value, 10);
+        generateHexGrid(radius);
+    });
+
+    // 初始网格
+    generateHexGrid(3);
+</script>
+
+</body>
+</html>
