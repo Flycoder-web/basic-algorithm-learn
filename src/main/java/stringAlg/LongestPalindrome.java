@@ -5,6 +5,7 @@ public class LongestPalindrome {
         String s = "abdbdc";
         System.out.println(find_simple(s));
         System.out.println(find_spread(s));
+        System.out.println(find(s));
     }
 
     public static boolean isMatch(String s) {
@@ -66,5 +67,37 @@ public class LongestPalindrome {
             }
         }
         return str.substring(left + 1, right);
+    }
+
+    // TODO 笔记待补充
+    // 优化的中心扩展
+    public static String find(String s) {
+        if(s == null || s.length() < 2)
+            return s;
+        int start = 0, end = 1;
+        for(int i = 0; i < s.length(); i++) {
+            int odd = spread_optimize(s, i, i);
+            int even = spread_optimize(s, i, i + 1);
+            int longer = Math.max(odd, even);
+            if(end - start + 1 < longer) {
+                start = i - (longer - 1) / 2;
+                end = i + longer / 2;
+            }
+        }
+        return s.substring(start, end + 1);
+    }
+
+    private static int spread_optimize(String str, int left, int right) {
+        int n = str.length();
+        while(left >= 0 && right < n) {
+            if(str.charAt(left) == str.charAt(right)) {
+                left--;
+                right++;
+            } else {
+                break;
+            }
+        }
+        // 返回当前扩展后的回文长度
+        return right - left - 1;
     }
 }
