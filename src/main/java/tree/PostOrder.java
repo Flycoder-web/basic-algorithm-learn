@@ -25,16 +25,18 @@ public class PostOrder {
         Deque<TreeNode> stack = new ArrayDeque<>();
         Deque<Integer> deque = new ArrayDeque<>();
         // 先加入根节点
-        stack.offerFirst(node);
+        stack.push(node);
         while(!stack.isEmpty()) {
             TreeNode top = stack.pop();
-            deque.offerFirst(top.val);
-            // 先压入左边，再压入右边，出栈的时候，就会先右边再左边
+            deque.push(top.val);
+            // 先压入左边，再压入右边，出栈的时候，就会先右边再左边（调整前序遍历的顺序，然后反转结果）
             if(top.left != null)
-                stack.offerFirst(top.left);
+                stack.push(top.left);
             if(top.right != null)
-                stack.offerFirst(top.right);
+                stack.push(top.right);
         }
         deque.forEach(item -> System.out.print(item + " "));
     }
+
+
 }

@@ -23,7 +23,7 @@ public class PreOrder {
     public static void preOrder_stack(TreeNode node) {
         Deque<TreeNode> deque = new ArrayDeque<>();
         if(node != null) {
-            deque.addFirst(node);
+            deque.push(node);
         }
         while(!deque.isEmpty()) {
             TreeNode top = deque.pop();

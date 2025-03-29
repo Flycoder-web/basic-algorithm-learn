@@ -22,7 +22,7 @@ public class InOrder {
         Deque<TreeNode> stack = new ArrayDeque<>();
         while(node != null || !stack.isEmpty()) {
             while (node != null) {
-                stack.offerFirst(node);
+                stack.push(node);
                 node = node.left;
             }
             node = stack.pop();
