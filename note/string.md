@@ -387,6 +387,27 @@ public static void getNext(int[] next, String pattern) {
 过程如下：
 ![模式串next数组](./assets/kmp-next.gif)
 
+还有一种更现代化写法，初始化 `next[0]=0` 和 `j=0`，且利用循环手动回退：
+```java
+public static int[] findNext(String pattern) {
+     int n = pattern.length();
+     int[] next = new int[n];
+     int j = 0; // 当前已匹配的前后缀长度
+     for(int i = 1; i < n; i++) { // 表示长度为 i+1 的子串
+         // 如果下一个字符不匹配，就回退 j 到 next[j-1]
+         while(j > 0 && pattern.charAt(j) != pattern.charAt(i)) {
+             j = next[j - 1];
+         }
+         // 如果匹配，就扩展前后缀
+         if(pattern.charAt(j) == pattern.charAt(i)) {
+             j++;
+         }
+         next[i] = j;
+     }
+     return next;
+ }
+```
+
 下面用 `getNext()` 方法计算 next 数组，`kmp(String, String)` 调用 next[] 数组进行匹配回溯，`isMatch(String, String)` 主要是判断两个字符串是不是互为旋转词。
 ```java
 public class KMPTest {
