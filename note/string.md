@@ -463,6 +463,51 @@ public class KMPTest {
     }
 }
 ```
+然后是另一种求 next 数组对应的 kmp 算法：
+```java
+public static int kmp(String s, String pattern) {
+   if(pattern.isEmpty()) return 0; // 空模式串默认匹配开头
+   int[] next = findNext(pattern);
+   int j = 0; // 模式串指针
+   // 匹配的过程与模式串求next数组相似
+   for(int i = 0; i < s.length(); i++) {
+      if(j > 0 && s.charAt(i) != pattern.charAt(j)) {
+          j = next[j - 1]; // 回退
+      }
+      if(s.charAt(i) == pattern.charAt(j)) {
+          j++;
+      }
+      if(j == pattern.length()) {
+          return i - j + 1; // 找到匹配
+      }
+   }
+   return -1;
+}
+
+// 找出所有匹配的位置
+public static List<Integer> kmpAll(String text, String pattern) {
+   List<Integer> result = new ArrayList<>();
+   if (pattern.isEmpty()) {
+      for (int i = 0; i <= text.length(); i++) result.add(i);
+      return result;
+   }
+   int[] next = findNext(pattern);
+   int j = 0;
+   for (int i = 0; i < text.length(); i++) {
+      while (j > 0 && text.charAt(i) != pattern.charAt(j)) {
+         j = next[j - 1];
+      }
+      if (text.charAt(i) == pattern.charAt(j)) {
+         j++;
+      }
+      if (j == pattern.length()) {
+         result.add(i - j + 1);
+         j = next[j - 1]; // 继续寻找下一个
+      }
+   }
+   return result;
+}
+```
 kmp 算法的空间复杂度为 `O(m)`，时间复杂度为 `O(n+m)`（计算 next[] 数组的时间复杂度 + 遍历比较的复杂度）。
 
 ## Rabin-karp 算法
