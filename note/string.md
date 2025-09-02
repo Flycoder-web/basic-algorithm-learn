@@ -471,7 +471,7 @@ public static int kmp(String s, String pattern) {
    int j = 0; // 模式串指针
    // 匹配的过程与模式串求next数组相似
    for(int i = 0; i < s.length(); i++) {
-      if(j > 0 && s.charAt(i) != pattern.charAt(j)) {
+      while (j > 0 && s.charAt(i) != pattern.charAt(j)) {
           j = next[j - 1]; // 回退
       }
       if(s.charAt(i) == pattern.charAt(j)) {
